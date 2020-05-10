@@ -33,12 +33,25 @@ exports.getTour = (req, res) => {
   }
 };
 
+exports.checkBody = (req, res, next) => {
+  console.log(`checkTour`);
+  console.log(req.body);
+  if(!req.body || !req.body.name || !req.body.price) {
+      return res.status(400).json({
+          status: 'fail',
+          message: `Missing name or price trying to add a tour.`,
+        });
+  }
+  next();
+};
+
 exports.createTour = (req, res) => {
+  console.log(`createTour`);
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
   tours.push(newTour);
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err) => {
       res.status(201).json({
