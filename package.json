@@ -4,13 +4,14 @@
   "description": "Natours API",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon server.js"
+    "start": "nodemon server.js"
   },
   "author": "Andrey Safonov",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mongoose": "^5.9.14",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.3"
   }
