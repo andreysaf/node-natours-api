@@ -2,7 +2,14 @@ const Tour = require('./../model/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const queryObj = { ...req.query }; // deep copy of the object
+    const excludedFileds = ['page', 'sort', 'limit', 'fields'];
+    excludedFileds.forEach(el => delete queryObj[el]);
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|te|lte|lt)\b/g, (match) => {
+      return `$${match}`;
+    });
+    const tours = await Tour.find(JSON.parse(queryStr));
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -39,7 +46,7 @@ exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
     res.status(200).json({
       status: 'success',
@@ -57,10 +64,10 @@ exports.updateTour = async (req, res) => {
 
 exports.deleteTour = async (req, res) => {
   try {
-    await Tour.findByIdAndDelete(req.params.id)
+    await Tour.findByIdAndDelete(req.params.id);
     res.status(204).json({
       status: 'success',
-      data: null
+      data: null,
     });
   } catch (err) {
     res.status(404).json({
