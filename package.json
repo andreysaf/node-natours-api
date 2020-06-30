@@ -14,7 +14,8 @@
     "mongoose": "^5.9.14",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.3",
-    "slugify": "^1.4.4"
+    "slugify": "^1.4.4",
+    "validator": "^13.1.1"
   },
   "engines": {
     "node": ">=10.0.0"
