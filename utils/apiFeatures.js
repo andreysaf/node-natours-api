@@ -4,7 +4,7 @@ class APIFeatures {
       this.queryString = queryString;
     }
   
-    filter = () => {
+    filter() {
       const queryObj = { ...this.queryString }; // deep copy of the object
       const excludedFileds = ['page', 'sort', 'limit', 'fields'];
       excludedFileds.forEach((el) => delete queryObj[el]);
@@ -19,7 +19,7 @@ class APIFeatures {
       return this;
     };
   
-    sort = () => {
+    sort() {
       if (this.queryString.sort) {
         const sortBy = this.queryString.sort.split(',').join(' ');
         this.query = this.query.sort(sortBy);
@@ -30,7 +30,7 @@ class APIFeatures {
       return this;
     };
   
-    limit = () => {
+    limit() {
       if (this.queryString.fields) {
         const fields = this.queryString.fields.split(',').join(' ');
         this.query = this.query.select(fields);
@@ -41,7 +41,7 @@ class APIFeatures {
       return this;
     };
   
-    paginate = () => {
+    paginate() {
       const page = Number(this.queryString.page) || 1;
       const limit = Number(this.queryString.limit) || 100;
       const skip = (page - 1) * limit;
