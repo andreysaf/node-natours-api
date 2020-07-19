@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -35,6 +36,17 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords do not match'
     }
   },
+});
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined; // do not want to persist this field and only keep one 
+
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
