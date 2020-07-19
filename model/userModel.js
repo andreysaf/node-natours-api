@@ -27,6 +27,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
+    validate: {
+      // this will run on create and save
+      validator: function(el) {
+        return el === this.password;
+      },
+      message: 'Passwords do not match'
+    }
   },
 });
 
