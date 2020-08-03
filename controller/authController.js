@@ -80,5 +80,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new AppError('User recently changed password', 401));
   }
 
+  req.user = foundUser;
   next();
 });
