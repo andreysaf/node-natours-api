@@ -11,6 +11,16 @@ const sendEmail = async options => {
         }
     });
 
+    console.log('Transporter created');
+
+    transporter.verify(function(error, success) {
+        if (error) {
+             console.log(error);
+        } else {
+             console.log('Server is ready to take our messages');
+        }
+     });
+
     // define the email options
     const mailOptions = {
         from: 'Andrey Safonov <a.so777@live.ca>',
@@ -19,8 +29,12 @@ const sendEmail = async options => {
         text: options.message,
     }
 
+    console.log('Mail options created');
+
     // actually send the email
     await transporter.sendMail(mailOptions);
+    
+    console.log('email sent');
 };
 
 module.exports = sendEmail;
