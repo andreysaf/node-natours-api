@@ -18,6 +18,17 @@ const signToken = id => {
 
 const createAndSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 100,
+    ),
+    httpOnly: true
+  };
+
+  if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
@@ -26,7 +37,7 @@ const createAndSendToken = (user, statusCode, res) => {
       user,
     },
   });
-}
+};
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -164,7 +175,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // update changedPasswordAt property for the user
 
-
   // log the user in, send JWT
   // if everything okay send the token to the client
   createAndSendToken(user, 200, res);
@@ -187,5 +197,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // log user in send JWT
   createAndSendToken(user, 200, res);
-
 });
