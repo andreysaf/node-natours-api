@@ -11,7 +11,7 @@ mongoose.connect(DB, { useNewUrlParser: true, useCreateIndex: true, useFindAndMo
   console.log('DB connection successful');
 });
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 const importData = async () => {
     try {
