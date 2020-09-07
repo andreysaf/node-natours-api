@@ -117,6 +117,14 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt'
+  });
+  next();
+});
+
 // function is used to get access to this keyword
 // document middleware: runs before .save and .create but not .update
 tourSchema.pre('save', function (next) {
