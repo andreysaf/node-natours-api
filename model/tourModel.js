@@ -112,6 +112,9 @@ const tourSchema = new mongoose.Schema(
   },
 );
 
+//tourSchema.index({ price: 1 });
+//tourSchema.index({ price: 1, ratingsAverage: -1 });
+
 // Virtual property on model to avoid data duplication
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
@@ -121,13 +124,13 @@ tourSchema.virtual('durationWeeks').get(function () {
 tourSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour',
-  localField: '_id'
+  localField: '_id',
 });
 
-tourSchema.pre(/^find/, function(next) {
+tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'guides',
-    select: '-__v -passwordChangedAt'
+    select: '-__v -passwordChangedAt',
   });
   next();
 });
