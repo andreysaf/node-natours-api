@@ -25,12 +25,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not impletented',
-  });
-};
+exports.createUser = factory.createOne(User);
 
 exports.getUser = (req, res) => {
   res.status(500).json({
