@@ -18,20 +18,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getReview = catchAsync(async (req, res, next) => {
-  const review = await await Review.findById(req.params.id);
-
-  if (!review) {
-    return next(new AppError('Review ID does not exist', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      review,
-    },
-  });
-});
+exports.getReview = factory.getOne(Review);
 
 exports.deleteReview = factory.deleteOne(Review);
 

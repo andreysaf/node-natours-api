@@ -37,3 +37,24 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getOne = (Model, populateOptions) => catchAsync(async (req, res, next) => {
+  // populate references data by referencing the IDs, hit on performance depending on how many times it is hit
+  let query = Model.findById(req.params.id);
+  if (populateOptions) {
+    query = query.populate(populateOptions);
+  }
+  const doc = await query;
+
+  if (!doc) {
+    return next(new AppError('Document does not exist', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      doc,
+    },
+  });
+});
+

@@ -28,21 +28,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  // populate references data by referencing the IDs, hit on performance depending on how many times it is hit
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-
-  if (!tour) {
-    return next(new AppError('Tour ID does not exist', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 
 exports.updateTour = factory.updateOne(Tour);
 
