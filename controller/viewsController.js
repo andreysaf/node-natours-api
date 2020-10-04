@@ -27,3 +27,11 @@ exports.getTour = catchAsync(async (req, res) => {
     tour
   });
 });
+
+exports.getLoginForm = (req, res) => {
+  // build template
+  // render the template and send it back
+  res.status(200).render('login', {
+    title: 'Login'
+  });
+};
