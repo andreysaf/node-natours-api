@@ -22,10 +22,10 @@ const createAndSendToken = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 100,
     ),
-    httpOnly: true
+    httpOnly: true,
   };
 
-  if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -101,6 +101,32 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = foundUser;
+  next();
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    // listening for cookies from the browser
+    let token = req.cookies.jwt;
+    // verification of token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+    // check if the user trying access the route still exists
+    const foundUser = await User.findById(decoded.id);
+    if (!foundUser) {
+      return next();
+    }
+
+    // check if the user password was changed after JWT was issued
+    if (foundUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // there is a logged in user
+    res.locals.user = foundUser;
+    return next();
+  }
+
   next();
 });
 
