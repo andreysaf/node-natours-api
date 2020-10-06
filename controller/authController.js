@@ -70,6 +70,14 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendToken(user, 200, res);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedOut', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   // getting token
   let token;
@@ -104,31 +112,37 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
-    // listening for cookies from the browser
-    let token = req.cookies.jwt;
-    // verification of token
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    try {
+      // listening for cookies from the browser
+      let token = req.cookies.jwt;
+      // verification of token
+      const decoded = await promisify(jwt.verify)(
+        token,
+        process.env.JWT_SECRET,
+      );
 
-    // check if the user trying access the route still exists
-    const foundUser = await User.findById(decoded.id);
-    if (!foundUser) {
+      // check if the user trying access the route still exists
+      const foundUser = await User.findById(decoded.id);
+      if (!foundUser) {
+        return next();
+      }
+
+      // check if the user password was changed after JWT was issued
+      if (foundUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // there is a logged in user
+      res.locals.user = foundUser;
+      return next();
+    } catch (err) {
       return next();
     }
-
-    // check if the user password was changed after JWT was issued
-    if (foundUser.changedPasswordAfter(decoded.iat)) {
-      return next();
-    }
-
-    // there is a logged in user
-    res.locals.user = foundUser;
-    return next();
   }
-
   next();
-});
+};
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
