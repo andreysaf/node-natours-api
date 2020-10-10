@@ -13,10 +13,10 @@ export const login = async (email, password) => {
         });
 
         if(res.data.status === 'success') {
-            showAlert('success', 'Logged in successfully!');
+            showAlert('success', 'Logged in successfully');
             window.setTimeout(() => {
                 location.assign('/');
-            }, 1500);
+            }, 1000);
         }
     } catch (error) {
         showAlert('error', error.response.data.message);
