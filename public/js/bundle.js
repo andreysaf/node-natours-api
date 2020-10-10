@@ -8531,7 +8531,7 @@ exports.logout = logout;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateNameAndEmail = void 0;
+exports.updatePassword = exports.updateNameAndEmail = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -8593,6 +8593,58 @@ var updateNameAndEmail = /*#__PURE__*/function () {
 }();
 
 exports.updateNameAndEmail = updateNameAndEmail;
+
+var updatePassword = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(passwordCurrent, password, passwordConfirm) {
+    var res;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return (0, _axios.default)({
+              method: 'PATCH',
+              url: 'http://127.0.0.1:3001/api/v1/users/updateMyPassword',
+              data: {
+                passwordCurrent: passwordCurrent,
+                password: password,
+                passwordConfirm: passwordConfirm
+              }
+            });
+
+          case 3:
+            res = _context2.sent;
+
+            if (res.data.status === 'success') {
+              (0, _alerts.showAlert)('success', 'Password updated');
+              window.setTimeout(function () {
+                location.assign('/me');
+              }, 1000);
+            }
+
+            _context2.next = 10;
+            break;
+
+          case 7:
+            _context2.prev = 7;
+            _context2.t0 = _context2["catch"](0);
+            (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 7]]);
+  }));
+
+  return function updatePassword(_x3, _x4, _x5) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.updatePassword = updatePassword;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"mapbox.js":[function(require,module,exports) {
 "use strict";
 
@@ -8893,6 +8945,7 @@ var _mapbox = require("./mapbox");
 var mapBox = document.getElementById('map');
 var loginForm = document.querySelector('.form--login');
 var accountForm = document.querySelector('.form-user-data');
+var accountFormPass = document.querySelector('.form-user-settings');
 var logoutBtn = document.querySelector('.nav__el--logout'); // DELEGATION
 
 if (mapBox) {
@@ -8906,6 +8959,16 @@ if (accountForm) {
     var name = document.getElementById('name').value;
     var email = document.getElementById('email').value;
     (0, _updateSettings.updateNameAndEmail)(name, email);
+  });
+}
+
+if (accountFormPass) {
+  accountFormPass.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var passwordCurrent = document.getElementById('password-current').value;
+    var password = document.getElementById('password').value;
+    var passwordConfirm = document.getElementById('password-confirm').value;
+    (0, _updateSettings.updatePassword)(passwordCurrent, password, passwordConfirm);
   });
 }
 
