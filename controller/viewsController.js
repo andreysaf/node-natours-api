@@ -40,3 +40,11 @@ exports.getLoginForm = (req, res) => {
     title: 'Login'
   });
 };
+
+exports.getAccount = (req, res) => {
+  // build template
+  // render the template and send it back
+  res.status(200).render('account', {
+    title: 'Account'
+  });
+};
