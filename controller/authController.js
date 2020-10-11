@@ -173,8 +173,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false }); // need to save only resetToken, and when it expires
 
-  console.log('user is found and token generated');
-
   try {
     // Send it to the user's email
     const resetURL = `${req.protocol}://${req.get(

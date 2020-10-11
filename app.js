@@ -7,7 +7,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-
+const compression = require('compression');
 
 const userRouter = require('./routes/userRoutes');
 const tourRouter = require('./routes/tourRoutes');
@@ -76,6 +76,8 @@ app.use(
     ],
   }),
 );
+
+app.use(compression());
 
 // routes
 app.use('/', viewRouter);
