@@ -8544,7 +8544,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var updateNameAndEmail = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(name, email) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data) {
     var res;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -8555,10 +8555,7 @@ var updateNameAndEmail = /*#__PURE__*/function () {
             return (0, _axios.default)({
               method: 'PATCH',
               url: 'http://127.0.0.1:3001/api/v1/users/updateMe',
-              data: {
-                name: name,
-                email: email
-              }
+              data: data
             });
 
           case 3:
@@ -8587,7 +8584,7 @@ var updateNameAndEmail = /*#__PURE__*/function () {
     }, _callee, null, [[0, 7]]);
   }));
 
-  return function updateNameAndEmail(_x, _x2) {
+  return function updateNameAndEmail(_x) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -8639,7 +8636,7 @@ var updatePassword = /*#__PURE__*/function () {
     }, _callee2, null, [[0, 7]]);
   }));
 
-  return function updatePassword(_x3, _x4, _x5) {
+  return function updatePassword(_x2, _x3, _x4) {
     return _ref2.apply(this, arguments);
   };
 }();
@@ -8956,9 +8953,11 @@ if (mapBox) {
 if (accountForm) {
   accountForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    (0, _updateSettings.updateNameAndEmail)(name, email);
+    var form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    (0, _updateSettings.updateNameAndEmail)(form);
   });
 }
 

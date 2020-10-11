@@ -19,9 +19,11 @@ if (mapBox) {
 if (accountForm) {
     accountForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        updateNameAndEmail(name, email);
+        const form = new FormData();
+        form.append('name', document.getElementById('name').value);
+        form.append('email', document.getElementById('email').value);
+        form.append('photo', document.getElementById('photo').files[0]);
+        updateNameAndEmail(form);
     });
 }
 
