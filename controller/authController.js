@@ -16,7 +16,7 @@ const signToken = id => {
   );
 };
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
@@ -25,7 +25,7 @@ const createAndSendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -51,7 +51,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
 
-  createAndSendToken(newUser, 201, res);
+  createAndSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -70,7 +70,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // if everything okay send the token to the client
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 exports.logout = (req, res) => {
@@ -216,7 +216,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // log the user in, send JWT
   // if everything okay send the token to the client
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -235,5 +235,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // log user in send JWT
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
