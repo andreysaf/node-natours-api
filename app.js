@@ -55,7 +55,7 @@ app.use('/api', limiter);
 
 // need this route to receive and not a JSON object
 // use express.raw
-app.post('/webhook-checkout', express.raw, webhookCheckout);
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
 
 // body parser
 app.use(express.json({ limit: '10kb' }));
