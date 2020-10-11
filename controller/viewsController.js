@@ -42,6 +42,14 @@ exports.getLoginForm = (req, res) => {
   });
 };
 
+exports.getSignupForm = (req, res) => {
+  // build template
+  // render the template and send it back
+  res.status(200).render('signup', {
+    title: 'Sign up'
+  });
+};
+
 exports.getAccount = (req, res) => {
   // build template
   // render the template and send it back
