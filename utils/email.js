@@ -1,40 +1,52 @@
 const nodemailer = require('nodemailer');
+const pug = require('pug');
+const htmlToText = require('html-to-text');
 
-const sendEmail = async options => {
-    // create a transporter
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
-
-    console.log('Transporter created');
-
-    transporter.verify(function(error, success) {
-        if (error) {
-             console.log(error);
-        } else {
-             console.log('Server is ready to take our messages');
-        }
-     });
-
-    // define the email options
-    const mailOptions = {
-        from: 'Andrey Safonov <a.so777@live.ca>',
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
+module.exports = class Email {
+    constructor(user, url) {
+        this.to = user.email;
+        this.firstName = user.name.split(' ')[0];
+        this.url = url;
+        this.from = `Andrey Safonov <${process.env.EMAIL_FROM}>`;
     }
 
-    console.log('Mail options created');
+    createNewTransport() {
+        if (process.env.NODE_ENV === 'production') {
+            return 1;
+        } else {
+            return nodemailer.createTransport({
+                host: process.env.EMAIL_HOST,
+                port: process.env.EMAIL_PORT,
+                auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD
+                }
+            });
+        }
+    }
 
-    // actually send the email
-    await transporter.sendMail(mailOptions);
-    
-    console.log('email sent');
-};
+    async send(template, subject) {
+        // create the html
+        const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`, {
+            firstName: this.firstName,
+            url: this.url,
+            subject
+        });
 
-module.exports = sendEmail;
+        const mailOptions = {
+            from: this.from,
+            to: this.to,
+            subject,
+            html,
+            text: htmlToText.fromString(html)
+        }
+
+        // create transport and send the email
+        await this.createNewTransport().sendMail(mailOptions);
+        
+    }
+
+    async sendWelcome() {
+        await this.send('welcome', 'Welcome to the Natours');
+    }
+}

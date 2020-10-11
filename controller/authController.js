@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const User = require('./../model/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const sendEmail = require('../utils/email');
+const Email = require('../utils/email');
 const crypto = require('crypto');
 
 const signToken = id => {
@@ -47,6 +47,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     role: req.body.role,
   });
+
+  const url = `${req.protocol}://${req.get('host')}}/me`;
+  await new Email(newUser, url).sendWelcome();
 
   createAndSendToken(newUser, 201, res);
 });
@@ -179,11 +182,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const message = `Forgot your password? Submit a patch request with your new password to ${resetURL}.`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Reset your password',
-      message,
-    });
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: 'Reset your password',
+    //   message,
+    // });
 
     res.status(200).json({ status: 'success', message: 'Token sent to email' });
   } catch (err) {
