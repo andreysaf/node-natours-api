@@ -2,6 +2,8 @@
 Node.js, Express, MongoDB - Practice Project - Check it out on [Heroku](https://booktours-natours-app.herokuapp.com/)
 ![Screenshot](https://github.com/andreysaf/node-natours-api/blob/master/screen.png?raw=true "Screenshot")
 
+This project designed to architect and build a Node.JS backend for CRUD operations for tours, users, bookings and provide server-side rendering of a website. The project concentrates mostly on the backend, so the front-end is not responsive. 
+
 Shoutout to [Jonas](https://github.com/jonasschmedtmann) for putting together [an awesome course](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/). 
 
 ## Running locally
