@@ -6,6 +6,10 @@ This project designed to architect and build a Node.JS backend for CRUD operatio
 
 Shoutout to [Jonas](https://github.com/jonasschmedtmann) for putting together [an awesome course](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/). 
 
+## Demo
+
+Check it out on [Heroku](https://booktours-natours-app.herokuapp.com/). Note: it will take some time to load since Heroku will build the app on demand.
+
 ## Running locally
 
 There are a few steps to get the application running locally:
